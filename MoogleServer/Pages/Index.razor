@@ -1,0 +1,34 @@
+@page "/"
+
+<PageTitle>Moogle - Buscador de documentos</PageTitle>
+
+<h1>Moogle</h1>
+
+<input class="form-control my-4" @bind="query" @bind:event="oninput" aria-label="Consulta de búsqueda" placeholder="Introduzca su búsqueda">
+
+<button type="button" class="btn btn-primary" @onclick="RunQuery">Buscar</button>
+
+<ul class="results">
+@foreach (var item in result.Items()) {
+    <li>
+        <div class="item">
+            <p class="title">@item.Title</p>
+            <p>... @item.Snippet ...</p>
+        </div>
+    </li>
+}
+</ul>
+
+@if (!string.IsNullOrWhiteSpace(query) && result.Count == 0)
+{
+    <p class="text-muted">No se encontraron documentos relevantes para la consulta.</p>
+}
+
+@code {
+    private string query = "";
+    private SearchResult result = new SearchResult();
+
+    private void RunQuery() {
+        result = Moogle.Query(query);
+    }
+}
